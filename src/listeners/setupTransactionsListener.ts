@@ -2,7 +2,7 @@ import { Readable } from "stream";
 import {
   getTradeActivities,
   TradeActivity,
-} from "hadeswap-sdk/lib/hadeswap-core/utils";
+} from "hadeswap-sdk/lib/hadeswap-core/utils/index.js";
 import {
   mainnetProgramId,
   connection,

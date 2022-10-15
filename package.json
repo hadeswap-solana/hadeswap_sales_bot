@@ -5,7 +5,7 @@
   },
   "scripts": {
     "start": "node ./lib/index.js",
-    "postinstall": "(cd ./src/sdk/hadeswap-sdk-public/ && yarn install) && tsc --build && yarn copy-font && yarn copy-font-bold && yarn copy-hadeswap-logo && yarn copy-solana-logo",
+    "postinstall": "tsc --build && npm run copy-font && npm run copy-font-bold && npm run copy-hadeswap-logo && npm run copy-solana-logo",
     "copy-font": "cp ./src/generators/fonts/Poppins.ttf ./lib/generators/fonts/Poppins.ttf",
     "copy-font-bold": "cp ./src/generators/fonts/PoppinsBold.ttf ./lib/generators/fonts/PoppinsBold.ttf",
     "copy-hadeswap-logo": "cp ./src/generators/input/hadeswap_logo.png ./lib/generators/input/hadeswap_logo.png",
@@ -27,6 +27,7 @@
     "socket.io": "^4.5.2",
     "twit": "^2.2.11",
     "twitter-api-v2": "^1.12.7",
-    "typescript": "^4.7.3"
+    "typescript": "^4.7.3",
+    "hadeswap-sdk": "^0.3.10"
   }
 }

@@ -2,24 +2,16 @@ import {
     Client,
     GatewayIntentBits,
     ButtonStyle,
-    SlashCommandBuilder,
-    Routes,
     TextInputStyle,
     InteractionType,
-    User,
-    GuildMember,
     TextChannel,
     Guild,
-    NonThreadGuildBasedChannel,
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
-    ModalBuilder,
-    TextInputBuilder,
-    SelectMenuBuilder,
-    GuildMemberRoleManager, GuildBasedChannel,
+    GuildBasedChannel,
 } from 'discord.js';
-import {channelId, guildId, token} from '../constants/index.js';
+import {channelId, domain, guildId, token} from '../constants/index.js';
 import {LightNft} from "../getters/getNftMetadata.js";
 
 const bot = new Client({
@@ -62,7 +54,7 @@ export default async function sendAlertToDiscord(
 
     const embed = new EmbedBuilder()
         .setColor(0x83caff)
-        .setImage(`https://hadeswap-bot.herokuapp.com/static/${signature}_${address}.jpeg`)
+        .setImage(`${domain}/static/${signature}_${address}.jpeg`)
         .setTimestamp()
         .setFooter({
             text: "Hadeswap Sales Bot",
@@ -79,8 +71,7 @@ export default async function sendAlertToDiscord(
         }
     } else {
         const magicedenFee = magicedenFloor * 0.02;
-        const royalties = metadata.royalties / 100 / 100 * magicedenFloor;
-        const floorAfterFees = magicedenFloor - magicedenFee - royalties;
+        const floorAfterFees = magicedenFloor - magicedenFee;
 
         if (price > floorAfterFees) {
             embed.addFields([

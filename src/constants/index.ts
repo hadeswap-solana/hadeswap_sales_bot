@@ -3,6 +3,7 @@ import {Connection} from "@solana/web3.js";
 
 // APP DATA
 const port: number = parseInt(process.env.PORT || "8080");
+const domain: string = process.env.DOMAIN || "";
 
 // SOLANA RPCS
 const mainnetUrl: string = process.env.MAINNET_URL || "https://intensive-long-dew.solana-mainnet.discover.quiknode.pro/c2a770f2fdcb12f3ef435e424e9038fade3d8d74/";
@@ -28,9 +29,6 @@ const accessSecret: string = process.env.ACCESS_SECRET || "";
 const connection = new Connection(mainnetUrl, 'confirmed');
 const metaplex = new Metaplex(connection, { cluster: 'mainnet-beta' });
 
-// IMAGE UPLOAD API KEY
-const imgUploadKey: string = "";
-
 export {
     mainnetUrl,
     accessSecret,
@@ -46,6 +44,6 @@ export {
     metaplex,
     connection,
     token,
-    imgUploadKey,
+    domain,
     port
 }

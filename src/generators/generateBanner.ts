@@ -1,10 +1,8 @@
 import {LightNft} from "../getters/getNftMetadata";
 import {createCanvas, loadImage, registerFont} from "canvas";
-
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import fs from "fs";
-import getSolanaUsdPrice from "../getters/getSolanaUsdPrice.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -86,8 +84,7 @@ export default async function generateBanner(
                 }
             } else {
                 const magicedenFee = magicedenFloor * 0.02;
-                const royalties = metadata.royalties / 100 / 100 * magicedenFloor;
-                const floorAfterFees = magicedenFloor - magicedenFee - royalties;
+                const floorAfterFees = magicedenFloor - magicedenFee;
 
                 if (price > floorAfterFees) {
                     const difference = Math.floor((price - floorAfterFees) * 100) / 100;
@@ -125,8 +122,8 @@ export default async function generateBanner(
             stream.pipe(out);
 
             out.on('finish', () =>  {
-                console.log(`The JPEG banner for transaction ${signature} was created.`);
-                resolve(path)
+                console.log(`The JPEG banner for transaction ${signature} has been created.`);
+                resolve(path);
             });
         } catch (err) {
             reject(err);

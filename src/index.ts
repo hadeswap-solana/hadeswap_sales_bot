@@ -5,12 +5,11 @@ import getNftMetadata, {LightNft} from "./getters/getNftMetadata.js";
 import getMagicedenFloor from "./getters/getMagicedenFloor.js";
 import {sendPostWithMedia} from "./utils/twitter.js";
 import getSolanaUsdPrice from "./getters/getSolanaUsdPrice.js";
-import {Readable, Writable} from "stream";
+import {Readable} from "stream";
 import setupTransactionsListener from "./listeners/setupTransactionsListener.js";
 import {TradeActivity} from "./sdk/hadeswap-sdk-public/src/hadeswap-core/utils/index.js";
 import {LAMPORTS_PER_SOL} from "@solana/web3.js";
 import sendAlertToDiscord, { initBot } from "./utils/discord.js";
-import uploadBanner from "./uploaders/uploadBanner.js";
 import express from 'express';
 import {port} from "./constants/index.js";
 import path from "path";
@@ -32,8 +31,6 @@ async function initApp() {
 
         await initBot();
         await setupTransactionsListener(stream);
-
-        const forwarded: string[] = [];
 
         stream.on('data', async (chunk) => {
             try {

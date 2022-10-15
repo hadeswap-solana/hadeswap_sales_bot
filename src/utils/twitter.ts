@@ -48,8 +48,7 @@ export async function sendPostWithMedia(
             }
         } else {
             const magicedenFee = magicedenFloor * 0.02;
-            const royalties = metadata.royalties / 100 / 100 * magicedenFloor;
-            const floorAfterFees = magicedenFloor - magicedenFee - royalties;
+            const floorAfterFees = magicedenFloor - magicedenFee;
 
             if (price > floorAfterFees) {
                 content = content + `Seller saved ${Math.floor((price - floorAfterFees) * 100) / 100} SOL in fees! (Compared to MagicEden) \n\n`

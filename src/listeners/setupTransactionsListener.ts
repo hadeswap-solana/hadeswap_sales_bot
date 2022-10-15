@@ -1,10 +1,10 @@
-import {Readable, Writable} from "stream";
+import {Readable} from "stream";
 import {
     getTradeActivities,
     TradeActivity
 } from "../sdk/hadeswap-sdk-public/src/hadeswap-core/utils/getTradeActivities.js";
 import {mainnetProgramId, startingSignature, connection} from "../constants/index.js";
-import {clusterApiUrl, Connection, PublicKey} from '@solana/web3.js';
+import {PublicKey} from '@solana/web3.js';
 
 export default async function setupTransactionsListener(stream: Readable) {
     let lastSignature: string;

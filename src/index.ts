@@ -7,7 +7,7 @@ import { sendPostWithMedia } from "./utils/twitter.js";
 import getSolanaUsdPrice from "./getters/getSolanaUsdPrice.js";
 import { Readable } from "stream";
 import setupTransactionsListener from "./listeners/setupTransactionsListener.js";
-import { TradeActivity } from "hadeswap-sdk/lib/hadeswap-core/utils";
+import { TradeActivity } from "hadeswap-sdk/lib/hadeswap-core/utils/index.js";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import sendAlertToDiscord, { initBot } from "./utils/discord.js";
 import express from "express";

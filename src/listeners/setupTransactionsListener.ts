@@ -5,14 +5,19 @@ import {
 } from "hadeswap-sdk/lib/hadeswap-core/utils";
 import {
   mainnetProgramId,
-  startingSignature,
   connection,
 } from "../constants/index.js";
 import { PublicKey } from "@solana/web3.js";
 
 export default async function setupTransactionsListener(stream: Readable) {
-  let lastSignature: string;
   const programId = new PublicKey(mainnetProgramId);
+
+  let lastSignature: string = (await connection.getConfirmedSignaturesForAddress2(
+      programId,
+      {
+        limit: 1
+      }
+  ))[0].signature;
 
   setInterval(async () => {
     let activities: TradeActivity[];
@@ -20,7 +25,7 @@ export default async function setupTransactionsListener(stream: Readable) {
       activities = await getTradeActivities({
         programId,
         connection,
-        untilThisSignature: lastSignature || startingSignature,
+        untilThisSignature: lastSignature,
       });
     } catch (err) {
       console.log(

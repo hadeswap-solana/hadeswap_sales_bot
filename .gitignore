@@ -1,0 +1,7 @@
+node_modules
+.idea
+/lib
+.DS_Store
+/src/.DS_Store
+/src/generators/.DS_Store
+/src/sdk/.DS_Store

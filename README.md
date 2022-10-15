@@ -15,4 +15,5 @@ ___
     > - process.env.CONSUMER_SECRET - Twitter API Key Secret
     > - process.env.ACCESS_TOKEN - Twitter Bot Access Token
     > - process.env.ACCESS_SECRET - Twitter Bot Access Secret
+    > - process.env.DOMAIN - Domain under which your app is hosted. All generated banners will be hosted under this domain in /static directory.
 2. Do not change anything in yarn commands. Some of these commands copy static files to the build folder, so dynamic banners are generated without fetching files from external sources.

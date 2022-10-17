@@ -5,11 +5,12 @@
   },
   "scripts": {
     "start": "node ./lib/index.js",
-    "postinstall": "tsc --build && npm run copy-font && npm run copy-font-bold && npm run copy-hadeswap-logo && npm run copy-solana-logo",
+    "postinstall": "tsc --build && npm run copy-font && npm run copy-font-bold && npm run copy-hadeswap-logo && npm run copy-solana-logo && npm run copy-diamond-icon",
     "copy-font": "cp ./src/generators/fonts/Poppins.ttf ./lib/generators/fonts/Poppins.ttf",
     "copy-font-bold": "cp ./src/generators/fonts/PoppinsBold.ttf ./lib/generators/fonts/PoppinsBold.ttf",
     "copy-hadeswap-logo": "cp ./src/generators/input/hadeswap_logo.png ./lib/generators/input/hadeswap_logo.png",
-    "copy-solana-logo": "cp ./src/generators/input/solana.png ./lib/generators/input/solana.png"
+    "copy-solana-logo": "cp ./src/generators/input/solana.png ./lib/generators/input/solana.png",
+    "copy-diamond-icon": "cp ./src/generators/input/diamond.png ./lib/generators/input/diamond.png"
   },
   "dependencies": {
     "@metaplex-foundation/js": "^0.16.1",

@@ -2,7 +2,7 @@ import generateBanner from "./generators/generateBanner.js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import getNftMetadata, { LightNft } from "./getters/getNftMetadata.js";
-import getMagicedenFloor from "./getters/getMagicedenFloor.js";
+import getMagicedenData, {MagicedenData} from "./getters/getMagicedenData.js";
 import { sendPostWithMedia } from "./utils/twitter.js";
 import getSolanaUsdPrice from "./getters/getSolanaUsdPrice.js";
 import { Readable } from "stream";
@@ -13,6 +13,7 @@ import sendAlertToDiscord, { initBot } from "./utils/discord.js";
 import express from "express";
 import { port } from "./constants/index.js";
 import path from "path";
+import getRarity from "./getters/getRarity";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -46,12 +47,12 @@ async function initApp() {
         const type = parsedChunk.orderType === "sell" ? "Sale" : "Purchase";
         const usdPrice = Math.floor(solanaPrice * price * 100) / 100;
 
-        let magicedenFloor: number;
+        let magicedenData: MagicedenData;
         try {
-          magicedenFloor = await getMagicedenFloor(parsedChunk.nftMint);
+          magicedenData = await getMagicedenData(parsedChunk.nftMint);
         } catch (err) {
           console.log(
-            `Failed to fetch MagicEden floor for NFT: ${parsedChunk.nftMint}.`
+            `Failed to fetch MagicEden data for NFT: ${parsedChunk.nftMint}.`
           );
           return;
         }
@@ -61,9 +62,18 @@ async function initApp() {
           metadata = await getNftMetadata(parsedChunk.nftMint);
         } catch (err) {
           console.log(
-            `Failed to fetch metadata for NFT: ${parsedChunk.nftMint}.`
+              `Failed to fetch metadata for NFT: ${parsedChunk.nftMint}.`
           );
           return;
+        }
+
+        let rarity: { rarity: number, size: number } | undefined;
+        try {
+          rarity = await getRarity(parsedChunk.nftMint, magicedenData.collection);
+        } catch (err) {
+          console.log(
+              `Failed to fetch rarity for NFT: ${parsedChunk.nftMint}.`
+          );
         }
 
         if (!metadata.name || !metadata.image) return;
@@ -74,10 +84,11 @@ async function initApp() {
             metadata,
             price,
             usdPrice,
-            magicedenFloor,
+            magicedenData.floorPrice,
             type,
             parsedChunk.signature,
-            parsedChunk.nftMint
+            parsedChunk.nftMint,
+            rarity
           );
         } catch (err) {
           banner = "";
@@ -96,7 +107,7 @@ async function initApp() {
             usdPrice,
             parsedChunk.signature,
             type,
-            magicedenFloor,
+            magicedenData.floorPrice,
             parsedChunk.nftMint
           );
         } catch (err) {
@@ -111,7 +122,7 @@ async function initApp() {
               usdPrice,
               parsedChunk.signature,
               parsedChunk.orderType === "sell" ? "Sale" : "Purchase",
-              magicedenFloor,
+              magicedenData.floorPrice,
               metadata
             );
           } catch (err) {

@@ -13,7 +13,7 @@ import sendAlertToDiscord, { initBot } from "./utils/discord.js";
 import express from "express";
 import { port } from "./constants/index.js";
 import path from "path";
-import getRarity from "./getters/getRarity";
+import getRarity from "./getters/getRarity.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

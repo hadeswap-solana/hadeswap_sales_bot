@@ -5,123 +5,118 @@ import getNftMetadata, { LightNft } from "./getters/getNftMetadata.js";
 import getMagicedenFloor from "./getters/getMagicedenFloor.js";
 import { sendPostWithMedia } from "./utils/twitter.js";
 import getSolanaUsdPrice from "./getters/getSolanaUsdPrice.js";
-import { Readable } from "stream";
-import setupTransactionsListener from "./listeners/setupTransactionsListener.js";
-import { TradeActivity } from "hadeswap-sdk/lib/hadeswap-core/utils";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import sendAlertToDiscord, { initBot } from "./utils/discord.js";
 import express from "express";
+import consoleStamp from "console-stamp";
+import bodyParser from "body-parser";
 import { port } from "./constants/index.js";
 import path from "path";
+import fs from "fs";
 
+consoleStamp(console);
+
+const SERVER_ERROR = 500;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
 
+app.use(bodyParser.json())
 app.use("/static", express.static(path.join(__dirname, "/generators/output/")));
+
+app.post("/send", async (req, res) => {
+  const { solAmount, orderType, nftMint, signature } = req.body;
+
+  const price = Math.floor((solAmount / LAMPORTS_PER_SOL) * 100) / 100;
+  if (!price) {
+    console.log(`Bad price: ${price}.`);
+    return res.end();
+  }
+
+  const solanaPrice = await getSolanaUsdPrice();
+  const type = orderType === "sell" ? "Sale" : "Purchase";
+  const usdPrice = Math.floor(solanaPrice * price * 100) / 100;
+
+  let magicedenFloor: number;
+  try {
+    magicedenFloor = await getMagicedenFloor(nftMint);
+  } catch (err) {
+    console.log(`Failed to fetch MagicEden floor for NFT: ${nftMint}.`);
+    return res.status(SERVER_ERROR).end();
+  }
+
+  let metadata: LightNft;
+  try {
+    metadata = await getNftMetadata(nftMint);
+
+    if (!metadata.name || !metadata.image) {
+      throw new Error();
+    }
+  } catch (err) {
+    console.log(`Failed to fetch metadata for NFT: ${nftMint}.`);
+    return res.status(SERVER_ERROR).end();
+  }
+
+  let banner: string;
+  try {
+    banner = await generateBanner(
+        metadata,
+        price,
+        usdPrice,
+        magicedenFloor,
+        type,
+        signature,
+        nftMint
+    );
+  } catch (err) {
+    banner = "";
+    console.log(`Failed to generate banner for TX: ${signature}. Unable to send alerts to Discord & Twitter.`);
+    return res.status(SERVER_ERROR).end();
+  }
+
+  try {
+    await sendAlertToDiscord(
+        metadata,
+        "",
+        metadata.name,
+        price,
+        usdPrice,
+        signature,
+        type,
+        magicedenFloor,
+        nftMint
+    );
+  } catch (err) {
+    console.log("An error occured when sending alert to Discord.", err);
+  }
+
+  if (price < 10) {
+    try {
+      await sendPostWithMedia(
+          banner,
+          price,
+          usdPrice,
+          signature,
+          orderType === "sell" ? "Sale" : "Purchase",
+          magicedenFloor,
+          metadata
+      );
+    } catch (err) {
+      console.log("An error occured when sending alert to Twitter.", JSON.stringify(err.twitterReply));
+    }
+  }
+
+  if (banner) {
+    fs.unlinkSync(banner);
+  }
+
+  res.end();
+});
 
 async function initApp() {
   await (async () => {
-    const stream = new Readable({
-      read(size: number) {
-        return true;
-      },
-    });
-
     await initBot();
-    await setupTransactionsListener(stream);
-
-    stream.on("data", async (chunk) => {
-      try {
-        const parsedChunk: TradeActivity = JSON.parse(
-          (chunk as Buffer).toString()
-        );
-
-        const price =
-          Math.floor((parsedChunk.solAmount / LAMPORTS_PER_SOL) * 100) / 100;
-        if (!price) return;
-
-        const solanaPrice = await getSolanaUsdPrice();
-        const type = parsedChunk.orderType === "sell" ? "Sale" : "Purchase";
-        const usdPrice = Math.floor(solanaPrice * price * 100) / 100;
-
-        let magicedenFloor: number;
-        try {
-          magicedenFloor = await getMagicedenFloor(parsedChunk.nftMint);
-        } catch (err) {
-          console.log(
-            `Failed to fetch MagicEden floor for NFT: ${parsedChunk.nftMint}.`
-          );
-          return;
-        }
-
-        let metadata: LightNft;
-        try {
-          metadata = await getNftMetadata(parsedChunk.nftMint);
-        } catch (err) {
-          console.log(
-            `Failed to fetch metadata for NFT: ${parsedChunk.nftMint}.`
-          );
-          return;
-        }
-
-        if (!metadata.name || !metadata.image) return;
-
-        let banner: string;
-        try {
-          banner = await generateBanner(
-            metadata,
-            price,
-            usdPrice,
-            magicedenFloor,
-            type,
-            parsedChunk.signature,
-            parsedChunk.nftMint
-          );
-        } catch (err) {
-          banner = "";
-          console.log(
-            `Failed to generate banner for TX: ${parsedChunk.signature}. Unable to send alerts to Discord & Twitter.`
-          );
-          return;
-        }
-
-        try {
-          await sendAlertToDiscord(
-            metadata,
-            "",
-            metadata.name,
-            price,
-            usdPrice,
-            parsedChunk.signature,
-            type,
-            magicedenFloor,
-            parsedChunk.nftMint
-          );
-        } catch (err) {
-          console.log("An error occured when sending alert to Discord.");
-        }
-
-        if (price > 10) {
-          try {
-            await sendPostWithMedia(
-              banner,
-              price,
-              usdPrice,
-              parsedChunk.signature,
-              parsedChunk.orderType === "sell" ? "Sale" : "Purchase",
-              magicedenFloor,
-              metadata
-            );
-          } catch (err) {
-            console.log("An error occured when sending alert to Twitter.");
-          }
-        }
-      } catch (err) {
-        console.log("Unknown error occurred.");
-      }
-    });
   })();
 }
 

@@ -95,6 +95,6 @@ export default async function sendAlertToDiscord(
     try {
         await channel.send({ embeds: [embed], components: [buttonRow] });
     } catch (err) {
-        console.log("Something went wrong when forwarding transaction alert to Discord.");
+        console.log("Something went wrong when forwarding transaction alert to Discord.", err);
     }
 }

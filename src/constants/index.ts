@@ -20,10 +20,10 @@ const channelId: string = process.env.CHANNEL_ID || "";
 const token: string = process.env.TOKEN || "";
 
 // TWITTER DATA - TO BE UPDATED;
-const consumerKey: string = process.env.CONSUMER_KEY || "";
-const consumerSecret: string = process.env.CONSUMER_SECRET || "";
-const accessToken: string = process.env.ACCESS_TOKEN || "";
-const accessSecret: string = process.env.ACCESS_SECRET || "";
+const consumerKey: string = process.env.CONSUMER_KEY_MIN || "";
+const consumerSecret: string = process.env.CONSUMER_SECRET_MIN || "";
+const accessToken: string = process.env.ACCESS_TOKEN_MIN || "";
+const accessSecret: string = process.env.ACCESS_SECRET_MIN || "";
 
 // SOLANA & METAPLEX
 const connection = new Connection(mainnetUrl, 'confirmed');

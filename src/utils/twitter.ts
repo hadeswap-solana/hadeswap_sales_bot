@@ -60,7 +60,9 @@ export async function sendPostWithMedia(
         return content;
     })();
 
-    const params = { status: content, media_ids: media }
-    await client.post('statuses/update', params);
+    if (media[0]) {
+        const params = { status: content, media_ids: media }
+        await client.post('statuses/update', params);
+    }
 }
 

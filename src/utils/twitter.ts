@@ -1,7 +1,8 @@
 import Twit from "twit";
 import * as fs from 'fs';
 import {LightNft} from "../getters/getNftMetadata";
-import {keyMin, secretMin, accessTokenMin, accessSecretMin} from "../constants/index";
+
+const {keyMin, secretMin, accessTokenMin, accessSecretMin} = require('../constants');
 
 const client = new Twit({
     consumer_key: keyMin,

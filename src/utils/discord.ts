@@ -11,8 +11,9 @@ import {
     ButtonBuilder,
     GuildBasedChannel,
 } from 'discord.js';
-import {channelId, domain, guildId, token} from '../constants/index';
 import {LightNft} from "../getters/getNftMetadata.js";
+
+const {channelId, domain, guildId, token} = require('../constants');
 
 const bot = new Client({
     intents: [

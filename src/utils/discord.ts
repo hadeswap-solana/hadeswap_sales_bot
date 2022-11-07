@@ -11,13 +11,14 @@ import {
     ButtonBuilder,
     GuildBasedChannel,
 } from 'discord.js';
-import {channelId, domain, guildId, token} from '../constants/index.js';
+import {channelId, domain, guildId, token} from '../constants';
 import {LightNft} from "../getters/getNftMetadata.js";
 
 const bot = new Client({
     intents: [
         GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMessages
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
     ]
 });
 

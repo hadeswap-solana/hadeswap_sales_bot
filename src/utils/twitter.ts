@@ -1,13 +1,13 @@
 import Twit from "twit";
 import * as fs from 'fs';
 import {LightNft} from "../getters/getNftMetadata";
-import {accessSecret, accessToken, consumerKey, consumerSecret} from "../constants/index.js";
+import {keyMin, secretMin, accessTokenMin, accessSecretMin} from "../constants";
 
 const client = new Twit({
-    consumer_key: consumerKey,
-    consumer_secret: consumerSecret,
-    access_token: accessToken,
-    access_token_secret: accessSecret,
+    consumer_key: keyMin,
+    consumer_secret: secretMin,
+    access_token: accessTokenMin,
+    access_token_secret: accessSecretMin,
     strictSSL: true,
     timeout_ms: 60 * 1000
 });
@@ -60,9 +60,7 @@ export async function sendPostWithMedia(
         return content;
     })();
 
-    if (media[0]) {
-        const params = { status: content, media_ids: media }
-        await client.post('statuses/update', params);
-    }
+    const params = { status: content, media_ids: media }
+    await client.post('statuses/update', params);
 }
 

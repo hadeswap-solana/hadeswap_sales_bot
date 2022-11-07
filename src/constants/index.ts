@@ -20,10 +20,12 @@ const channelId: string = process.env.CHANNEL_ID || "";
 const token: string = process.env.TOKEN || "";
 
 // TWITTER DATA - TO BE UPDATED;
-const consumerKey: string = process.env.CONSUMER_KEY_MIN || "";
-const consumerSecret: string = process.env.CONSUMER_SECRET_MIN || "";
-const accessToken: string = process.env.ACCESS_TOKEN_MIN || "";
-const accessSecret: string = process.env.ACCESS_SECRET_MIN || "";
+const keyMin: string = process.env.KEY_MIN || "";
+const secretMin: string = process.env.SECRET_MIN || "";
+const bearerMin: string = process.env.BEARER_MIN || "";
+const accessTokenMin: string = process.env.ACCESS_TOKEN_MIN || "";
+const accessSecretMin: string = process.env.ACCESS_SECRET_MIN || "";
+
 
 // SOLANA & METAPLEX
 const connection = new Connection(mainnetUrl, 'confirmed');
@@ -31,16 +33,17 @@ const metaplex = new Metaplex(connection, { cluster: 'mainnet-beta' });
 
 export {
     mainnetUrl,
-    accessSecret,
-    accessToken,
+    accessSecretMin,
+    accessTokenMin,
     devnetUrl,
     devnetProgramId,
     mainnetProgramId,
     guildId,
     startingSignature,
     channelId,
-    consumerSecret,
-    consumerKey,
+    secretMin,
+    keyMin,
+    bearerMin,
     metaplex,
     connection,
     token,

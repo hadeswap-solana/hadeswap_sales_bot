@@ -75,23 +75,23 @@ app.post("/send", async (req, res) => {
     return res.status(SERVER_ERROR).end();
   }
 
-  try {
-    await sendAlertToDiscord(
-        metadata,
-        "",
-        metadata.name,
-        price,
-        usdPrice,
-        signature,
-        type,
-        magicedenFloor,
-        nftMint
-    );
-  } catch (err) {
-    console.log("An error occured when sending alert to Discord.", err);
-  }
-
   if (price < 10) {
+    try {
+      await sendAlertToDiscord(
+          metadata,
+          "",
+          metadata.name,
+          price,
+          usdPrice,
+          signature,
+          type,
+          magicedenFloor,
+          nftMint
+      );
+    } catch (err) {
+      console.log("An error occured when sending alert to Discord.", err);
+    }
+
     try {
       await sendPostWithMedia(
           banner,

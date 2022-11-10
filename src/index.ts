@@ -108,19 +108,15 @@ app.post("/send", async (req, res) => {
   }
 
   if (banner) {
-    fs.unlinkSync(banner);
+    setTimeout(() => {
+      fs.unlinkSync(banner);
+    }, 30000);
   }
 
   res.end();
 });
 
-async function initApp() {
-  await (async () => {
-    await initBot();
-  })();
-}
-
 app.listen(port, async () => {
   console.log("APP IS RUNNING ON PORT " + port);
-  await initApp();
+  await initBot();
 });

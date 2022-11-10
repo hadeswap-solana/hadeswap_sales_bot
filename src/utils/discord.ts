@@ -23,6 +23,10 @@ const bot = new Client({
 });
 
 export async function initBot(): Promise<void> {
+    bot.on('ready', async () => {
+        console.log(`Discord logged in as ${bot.user?.tag}`);
+    });
+
     try {
         await bot.login(token);
     } catch (err) {

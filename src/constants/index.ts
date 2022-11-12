@@ -12,7 +12,6 @@ const devnetUrl: string = process.env.DEVNET_URL || "";
 // HADESWAP CONSTANTS
 const mainnetProgramId: string = 'hadeK9DLv9eA7ya5KCTqSvSvRZeJC3JgD5a9Y3CNbvu';
 const devnetProgramId: string = process.env.DEVNET_PROGRAM_ID || "";
-const startingSignature: string = process.env.STARTING_SIGNATURE || "";
 
 // DISCORD DATA
 const guildId: string = process.env.GUILD_ID || "";
@@ -37,7 +36,6 @@ export {
     devnetProgramId,
     mainnetProgramId,
     guildId,
-    startingSignature,
     channelId,
     consumerSecret,
     consumerKey,

@@ -14,6 +14,7 @@ export default async function generateBanner(
     type: "Sale" | "Purchase",
     signature: string,
     address: string,
+    rarity?: { rarity: number, size: number },
 ) : Promise<string> {
     return new Promise(async (resolve, reject) => {
         try {
@@ -94,6 +95,14 @@ export default async function generateBanner(
                 } else {
                     ctx.fillText(`$${usdPrice} USD`, 650, 545);
                 }
+            }
+
+            if (rarity) {
+                const diamond = await loadImage(__dirname + '/input/diamond.png');
+                ctx.drawImage(diamond, x + 12, y + height + 14, 24, 24);
+                ctx.font = `22px Poppins`;
+                ctx.fillStyle = '#83caff';
+                ctx.fillText(`Rarity: ${rarity.rarity}/${rarity.size}`, x + 12 + 30 + 4, y + height + 34);
             }
 
             // PUTTING NFT IMAGE ON THE BANNER, ADDING STROKE AND BORDER RADIUS

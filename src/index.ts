@@ -4,6 +4,7 @@ import { dirname } from "path";
 import getNftMetadata, { LightNft } from "./getters/getNftMetadata.js";
 import getMagicedenFloor from "./getters/getMagicedenFloor.js";
 import { sendPostWithMedia } from "./utils/twitter.js";
+import { sendPostWithMedia as sendPostWithMediaPremium } from "./utils/twitterPremium.js";
 import getSolanaUsdPrice from "./getters/getSolanaUsdPrice.js";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import sendAlertToDiscord, { initBot } from "./utils/discord.js";
@@ -77,6 +78,7 @@ app.post("/send", async (req, res) => {
 
   try {
     await sendAlertToDiscord(
+        banner,
         metadata,
         "",
         metadata.name,
@@ -105,15 +107,26 @@ app.post("/send", async (req, res) => {
     } catch (err) {
       console.log("An error occured when sending alert to Twitter.", JSON.stringify(err.twitterReply));
     }
+  } else {
+
+    try {
+      await sendPostWithMediaPremium(
+          banner,
+          price,
+          usdPrice,
+          signature,
+          orderType === "sell" ? "Sale" : "Purchase",
+          magicedenFloor,
+          metadata
+      );
+    } catch (err) {
+      console.log("An error occured when sending alert to Twitter.", JSON.stringify(err.twitterReply));
+    }
   }
 
-  /*
   if (banner) {
-    setTimeout(() => {
-      fs.unlinkSync(banner);
-    }, 30000);
+    fs.unlinkSync(banner);
   }
-  */
 
   res.end();
 });

@@ -35,6 +35,7 @@ export async function initBot(): Promise<void> {
 }
 
 export default async function sendAlertToDiscord(
+    banner: string,
     metadata: LightNft,
     thumbnail: string,
     name: string,
@@ -59,7 +60,7 @@ export default async function sendAlertToDiscord(
 
     const embed = new EmbedBuilder()
         .setColor(0x83caff)
-        .setImage(`${domain}/static/${signature}_${address}.jpeg`)
+        //.setImage(`${domain}/static/${signature}_${address}.jpeg`)
         .setTimestamp()
         .setFooter({
             text: "Hadeswap Sales Bot",
@@ -98,7 +99,11 @@ export default async function sendAlertToDiscord(
         ])
 
     try {
-        await channel.send({ embeds: [embed], components: [buttonRow] });
+        await channel.send({
+            embeds: [embed],
+            components: [buttonRow],
+            files: [{ attachment: banner, name: 'image.png' }],
+        });
     } catch (err) {
         console.log("Something went wrong when forwarding transaction alert to Discord.", err);
     }

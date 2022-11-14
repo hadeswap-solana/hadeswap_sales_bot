@@ -26,6 +26,12 @@ const bearerMin: string = process.env.BEARER_MIN || "";
 const accessTokenMin: string = process.env.ACCESS_TOKEN_MIN || "";
 const accessSecretMin: string = process.env.ACCESS_SECRET_MIN || "";
 
+const keyPremium: string = process.env.KEY_PREMIUM || "";
+const secretPremium: string = process.env.SECRET_PREMIUM || "";
+const bearerPremium: string = process.env.BEARER_PREMIUM || "";
+const accessTokenPremium: string = process.env.ACCESS_TOKEN_PREMIUM || "";
+const accessSecretPremium: string = process.env.ACCESS_SECRET_PREMIUM || "";
+
 
 // SOLANA & METAPLEX
 const connection = new Connection(mainnetUrl, 'confirmed');
@@ -48,5 +54,9 @@ export {
     connection,
     token,
     domain,
-    port
+    port,
+    keyPremium,
+    secretPremium,
+    accessTokenPremium,
+    accessSecretPremium,
 }

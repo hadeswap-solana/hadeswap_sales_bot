@@ -29,6 +29,8 @@ app.use("/static", express.static(path.join(__dirname, "/generators/output/")));
 app.post("/send", async (req, res) => {
   const { solAmount, orderType, nftMint, signature } = req.body;
 
+  console.log('Send data: ', JSON.stringify({solAmount, orderType, nftMint, signature}));
+
   const price = Math.floor((solAmount / LAMPORTS_PER_SOL) * 100) / 100;
   if (!price) {
     console.log(`Bad price: ${price}.`);
@@ -36,6 +38,7 @@ app.post("/send", async (req, res) => {
   }
 
   const solanaPrice = await getSolanaUsdPrice();
+  console.log('solanaPrice: ', solanaPrice);
   const type = orderType === "sell" ? "Sale" : "Purchase";
   const usdPrice = Math.floor(solanaPrice * price * 100) / 100;
 
